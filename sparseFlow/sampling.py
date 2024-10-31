@@ -6,13 +6,11 @@ import pandas as pd
 from sparseFlow.preprocessing import perform_pca_binning, adjust_feature_importances, accumulate_indices_until_threshold
 
 
-def sample(adata=None, X=None, size=50000, seed=1234):
+def sample(X=None, size=50000, seed=1234):
     """
     Perform PCA and binning to sample cells based on the PCA space.
     Parameters
     ----------
-    adata: AnnData
-        Annotated data matrix.
     X: np.ndarray
         Data matrix.
     size: int
@@ -28,17 +26,14 @@ def sample(adata=None, X=None, size=50000, seed=1234):
     Raises
     ------
     ValueError
-        Either adata or X must be provided. If both are provided, adata will be used.
+        X must be provided.
     """
 
+    if X is None:
+        raise ValueError("X must be provided.")
+    
     scaler = StandardScaler()
-    if adata is not None:
-        data_standardized = scaler.fit_transform(adata.X)
-    elif X is not None:
-        data_standardized = scaler.fit_transform(X)
-    else:
-        raise ValueError("Either adata or X must be provided.")
-
+    data_standardized = scaler.fit_transform(X)
     X = data_standardized
 
     random.seed(seed)
