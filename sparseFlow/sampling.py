@@ -6,7 +6,7 @@ import pandas as pd
 from sparseFlow.preprocessing import perform_pca_binning, adjust_feature_importances, accumulate_indices_until_threshold
 
 
-def generate_sparse_sample(adata, size, seed=1234):
+def sample(adata, size, seed=1234):
     scaler = StandardScaler()
     data_standardized = scaler.fit_transform(adata.X)
     X = data_standardized
