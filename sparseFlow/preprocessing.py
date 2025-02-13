@@ -25,11 +25,11 @@ def perform_pca_binning(df, feature_importances, seed=12345):
     return
 
 
-def adjust_feature_importances(pca, top_features=20, constant=2):
+def adjust_feature_importances(pca, top_features=19, constant=2):
     if len(pca.explained_variance_ratio_) < 2 * top_features:
         out = np.ceil(pca.explained_variance_ratio_ * 100).astype(int)
     else:
-        multiplier = (1.0 * constant) / pca.explained_variance_ratio_[top_features-1]
+        multiplier = (1.0 * constant) / pca.explained_variance_ratio_[top_features]
         out = np.ceil(pca.explained_variance_ratio_ * multiplier).astype(int)
     
     return out[out > constant]
