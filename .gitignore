@@ -1,8 +1,4 @@
-data/
-configs/
-jobs/
-notebooks/
-benchmarking_methods/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
