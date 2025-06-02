@@ -1,23 +1,23 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "sParseSketch"
 version = "0.1.0"
-description = "A python package for fast sketching with applications on flow cytometry and scRNA-seq data focusing on retaining rare cell populations."
+description = "A Python package for fast sketching with applications on flow cytometry and scRNA-seq data, focusing on retaining rare cell populations."
 readme = "README.md"
 requires-python = ">=3.10"
-license = "BSD-3-Clause"
+license = "MIT"
 
 authors = [
-    {name = "Ehsan Karimiara", email = "e.karimiara@gmail.com" }
-    ]
+    { name = "Ehsan Karimiara", email = "e.karimiara@gmail.com" }
+]
 
 dependencies = [
     "numpy>=1.24",
     "pandas",
-    "scikit-learn",
+    "scikit-learn"
 ]
 
 [project.urls]
@@ -25,3 +25,4 @@ Homepage = "https://github.com/EhsanKA/sParseSketch"
 
 [tool.setuptools]
 packages = ["sParseSketch"]
+license-files = ["LICENSE"]

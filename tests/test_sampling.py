@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from sparseFlow.sampling import sample as sf  # Adjust the import based on your structure
+from sParseSketch.sampling import sample as sf  # Adjust the import based on your structure
 
 class TestSparseSampling(unittest.TestCase):
 
