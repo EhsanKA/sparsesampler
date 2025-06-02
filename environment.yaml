@@ -1,4 +1,4 @@
-name: sf
+name: sps
 channels:
   - conda-forge
 dependencies:
