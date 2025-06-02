@@ -25,4 +25,3 @@ Homepage = "https://github.com/EhsanKA/sparsesketch"
 
 [tool.setuptools]
 packages = ["sparsesketch"]
-license-files = ["LICENSE"]
