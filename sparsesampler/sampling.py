@@ -3,7 +3,7 @@ import time
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
-from sparsesketch.preprocessing import perform_pca_binning, adjust_feature_importances, accumulate_indices_until_threshold
+from sparsesampler.preprocessing import perform_pca_binning, adjust_feature_importances, accumulate_indices_until_threshold
 
 
 def sample(X=None, size=50000, seed=1234):
