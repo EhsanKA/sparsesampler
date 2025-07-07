@@ -7,7 +7,7 @@ class TestSparseSampling(unittest.TestCase):
     def setUp(self):
         # Create a sample dataset with random data
         np.random.seed(42)
-        self.data = np.random.rand(1000, 2000)  # 1000 cells, 20 features
+        self.data = np.random.rand(100000, 2000)  # 1000 cells, 20 features
 
     def test_sample_function(self):
         # Test the sampling function with valid input
@@ -32,8 +32,8 @@ class TestSparseSampling(unittest.TestCase):
 
     def test_sample_with_random_projection(self):
         # Test the sampling function with random projection enabled
-        size = 50
-        p = 10  # Reduced dimensions
+        size = 500
+        p = 100  # Reduced dimensions
         samples, elapsed_time = sf(X=self.data, size=size, p=p, random_projection=True)
 
         # Test if the number of samples returned is as expected
@@ -44,7 +44,7 @@ class TestSparseSampling(unittest.TestCase):
                         "Some samples are not valid indices of the input data.")
 
         # Optional: Validate the elapsed time is reasonable (e.g., less than 5 seconds)
-        self.assertLess(elapsed_time, 5, "Elapsed time exceeds expected duration.")
+        self.assertLess(elapsed_time, 20, "Elapsed time exceeds expected duration.")
 
 if __name__ == '__main__':
     unittest.main()

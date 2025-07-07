@@ -26,19 +26,25 @@ def perform_pca_binning(df, feature_importances, seed=12345):
 
 
 def adjust_feature_importances(pca, top_features=19, constant=2):
-    n_features = len(pca.explained_variance_ratio_)
-    print(f'Number of features is {n_features}.')
-    if n_features < 2 * top_features:
-        out = np.ceil(pca.explained_variance_ratio_ * 100).astype(int)
-    else:
-        # multiplier = (1.0 * constant) / pca.explained_variance_ratio_[top_features]
-        # out = np.ceil(pca.explained_variance_ratio_ * multiplier).astype(int)
-        out = np.ceil(pca.explained_variance_ratio_ * 100).astype(int)
-        
-    out = out[out > constant] # this line is added to improve the performance
-    l = len(out)
-    print(f'Number of features after adjustment is {l}.')
-    return out
+    """
+    Adjusts the feature importances based on the explained variance ratio from a PCA object.
+
+    Parameters:
+        pca: Fitted PCA object from sklearn.decomposition.PCA
+        top_features (int): Number of top features to consider for adjustment.
+        constant (int): Minimum threshold for feature importance to be retained.
+
+    Returns:
+        np.ndarray: Adjusted feature importances (integers), filtered by the constant or lower if needed.
+    """
+    explained = pca.explained_variance_ratio_
+    out = np.ceil(explained * 100).astype(int)
+    threshold = constant
+    filtered = out[out > threshold]
+    while filtered.size == 0 and threshold >= out.min():
+        threshold -= 1
+        filtered = out[out > threshold]
+    return filtered
 
 
 def find_threshold_index(sorted_grid_cells, threshold):
