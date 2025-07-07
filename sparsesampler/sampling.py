@@ -6,9 +6,9 @@ import pandas as pd
 from sparsesampler.preprocessing import perform_pca_binning, adjust_feature_importances, accumulate_indices_until_threshold
 
 
-def sample(X=None, size=50000, seed=1234):
+def sample(X=None, size=50000, seed=1234, p=100, random_projection=False):
     """
-    Perform PCA and binning to sample cells based on the PCA space.
+    Perform PCA and binning to sample cells based on the PCA space, with optional random projection.
     Parameters
     ----------
     X: np.ndarray
@@ -17,6 +17,10 @@ def sample(X=None, size=50000, seed=1234):
         Number of cells to sample.
     seed: int
         Random seed.
+    p: int
+        Number of reduced dimensions (for PCA and random projection).
+    random_projection: bool
+        If True, apply random projection to p dimensions before PCA.
     Returns
     -------
     samples: list
@@ -40,11 +44,22 @@ def sample(X=None, size=50000, seed=1234):
     print(f'********* #Start# *********')
     start_time = time.time()
 
-    n_components = min(X.shape[1], 100)
+    if random_projection:
+        from sklearn.random_projection import GaussianRandomProjection
+        projector = GaussianRandomProjection(n_components=p, random_state=seed)
+        X_projected = projector.fit_transform(X)
+        X_for_pca = X_projected
+    else:
+        X_for_pca = X
+
+    n_components = min(X_for_pca.shape[1], p)
     pca = PCA(n_components=n_components)
-    pca.fit(X)
-    X_pca = pca.transform(X)
+    pca.fit(X_for_pca)
+    X_pca = pca.transform(X_for_pca)
     df = pd.DataFrame(X_pca[:, :n_components], columns=[f'PC{i + 1}' for i in range(n_components)])
+
+    elapsed_time_pca = time.time() - start_time
+    print(f"Elapsed time after PCA: {elapsed_time_pca} seconds")
 
     feature_importances = adjust_feature_importances(pca)
     perform_pca_binning(df, feature_importances)
