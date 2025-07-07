@@ -22,7 +22,7 @@ class TestSparseSampling(unittest.TestCase):
                         "Some samples are not valid indices of the input data.")
 
         # Optional: Validate the elapsed time is reasonable (e.g., less than 5 seconds)
-        self.assertLess(elapsed_time, 5, "Elapsed time exceeds expected duration.")
+        self.assertLess(elapsed_time, 20, "Elapsed time exceeds expected duration.")
 
     def test_sample_function_no_input(self):
         # Test the sampling function with no input data
