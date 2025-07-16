@@ -25,20 +25,20 @@ def perform_pca_binning(df, feature_importances, seed=12345):
     return
 
 
-def adjust_feature_importances(pca, top_features=19, constant=2):
+def adjust_feature_importances(pca, k=100, constant=2):
     """
     Adjusts the feature importances based on the explained variance ratio from a PCA object.
 
     Parameters:
         pca: Fitted PCA object from sklearn.decomposition.PCA
-        top_features (int): Number of top features to consider for adjustment.
-        constant (int): Minimum threshold for feature importance to be retained.
+        k (int): Bin Resolution Factor.
+        constant (int): Minimum threshold for speeding up the sampling process.
 
     Returns:
         np.ndarray: Adjusted feature importances (integers), filtered by the constant or lower if needed.
     """
     explained = pca.explained_variance_ratio_
-    out = np.ceil(explained * 100).astype(int)
+    out = np.ceil(explained * k).astype(int)
     threshold = constant
     filtered = out[out > threshold]
     while filtered.size == 0 and threshold >= out.min():

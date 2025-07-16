@@ -6,7 +6,7 @@ import pandas as pd
 from sparsesampler.preprocessing import perform_pca_binning, adjust_feature_importances, accumulate_indices_until_threshold
 
 
-def sample(X=None, size=50000, seed=1234, p=100, random_projection=False):
+def sample(X=None, size=50000, seed=1234, p=100, k=100, random_projection=False):
     """
     Perform PCA and binning to sample cells based on the PCA space, with optional random projection.
     Parameters
@@ -19,6 +19,8 @@ def sample(X=None, size=50000, seed=1234, p=100, random_projection=False):
         Random seed.
     p: int
         Number of reduced dimensions (for PCA and random projection).
+    k: int
+        Bin Resolution Factor.
     random_projection: bool
         If True, apply random projection to p dimensions before PCA.
     Returns
@@ -61,7 +63,7 @@ def sample(X=None, size=50000, seed=1234, p=100, random_projection=False):
     elapsed_time_pca = time.time() - start_time
     print(f"Elapsed time after PCA: {elapsed_time_pca} seconds")
 
-    feature_importances = adjust_feature_importances(pca)
+    feature_importances = adjust_feature_importances(pca, k=k)
     perform_pca_binning(df, feature_importances)
 
     threshold = size
