@@ -1,3 +1,16 @@
+"""
+Visualization Generator for SParseSampler
+
+This script is used solely to generate visualizations for the GitHub repository
+and documentation. It is NOT part of the main SParseSampler package and should
+not be imported or used in production code.
+
+Purpose: Creates animated demonstrations of the sparse sampling process using
+toy datasets to help users understand how the algorithm works.
+
+Usage: python docs/generate_visualization.py
+"""
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -5,9 +18,13 @@ from matplotlib.patches import Rectangle
 from sklearn.datasets import make_blobs
 from sklearn.decomposition import PCA
 from matplotlib.animation import FuncAnimation
-from .preprocessing import perform_pca_binning, adjust_feature_importances, accumulate_indices_until_threshold
 import random
 import os
+import sys
+
+# Add the parent directory to the path to import sparsesampler modules
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from sparsesampler.preprocessing import perform_pca_binning, adjust_feature_importances, accumulate_indices_until_threshold
 
 def generate_toy_data(n_samples=200, random_state=42):
     """Generate toy data with 3:1 variance ratio between PCs."""
@@ -48,7 +65,7 @@ def get_cell_patch_data(cells_to_highlight, color, n_bins_pc1, n_bins_pc2, pc1_e
             patches_data.append({'xy': (x0, y0), 'width': width, 'height': height, 'facecolor': color, 'alpha': 0.3})
     return patches_data
 
-def create_animation(X, y, output_file='sampling_process.gif', target_sample_size=50, base_bins=8, random_seed=42, save_frames=False):
+def create_animation(X, y, output_file='docs/sampling_process.gif', target_sample_size=50, base_bins=8, random_seed=42, save_frames=False):
     random.seed(random_seed)
     pca = PCA(n_components=2)
     X_pca = pca.fit_transform(X)

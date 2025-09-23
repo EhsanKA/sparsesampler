@@ -52,7 +52,7 @@ pip install sparsesampler
 ## Usage
 
 ```python
-import sparsesampler as sps
+import sparsesampler.sampling as sps
 import pandas as pd
 import numpy as np
 from scipy import sparse
@@ -72,9 +72,8 @@ import scanpy as sc
 adata = sc.read_h5ad('your_data.h5ad')
 X = adata.X  # Use .toarray() if sparse matrix
 
-# Initialize and run SParseSampler
-sampler = sps.SParseSampler(n_pc=50, k_factor=100)
-indices = sampler.fit_transform(X)
+# Run SParseSampler
+indices, _ = sps.sample(X=X, n_samples=100000, n_pc=50, k_factor=100)
 
 # Get subsampled data
 X_sampled = X[indices]
@@ -93,17 +92,17 @@ The following animation shows how points are selected from a 2D toy dataset usin
 - Selected points turn red and remain red in all subsequent frames.
 - The process continues until the target number of points is reached.
 
-![Sampling Process Animation](./sampling_process.gif)
+![Sampling Process Animation](./docs/sampling_process.gif)
 
-## Usage
+## Generating the Visualization
 
-To generate the animation, run:
+To generate the animation yourself, run:
 
 ```bash
-python -m sparsesampler.visualization
+python docs/generate_visualization.py
 ```
 
-The animation will be saved as `sampling_process.gif` in the project directory.
+The animation will be saved as `docs/sampling_process.gif` in the project directory.
 
 ## Citation
 
