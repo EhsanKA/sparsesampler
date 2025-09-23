@@ -53,9 +53,24 @@ pip install sparsesampler
 
 ```python
 import sparsesampler as sps
+import pandas as pd
+import numpy as np
+from scipy import sparse
 
 # Load your data (n_samples × n_features)
-X = # your data matrix
+# Example 1: From CSV file
+X = pd.read_csv('your_data.csv').values
+
+# Example 2: From NumPy array
+X = np.load('your_data.npy')
+
+# Example 3: From sparse matrix
+X = sparse.load_npz('your_sparse_data.npz')
+
+# Example 4: scRNA-seq data (AnnData format)
+import scanpy as sc
+adata = sc.read_h5ad('your_data.h5ad')
+X = adata.X  # Use .toarray() if sparse matrix
 
 # Initialize and run SParseSampler
 sampler = sps.SParseSampler(n_pc=50, k_factor=100)
