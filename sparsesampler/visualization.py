@@ -7,6 +7,7 @@ from sklearn.decomposition import PCA
 from matplotlib.animation import FuncAnimation
 from .preprocessing import perform_pca_binning, adjust_feature_importances, accumulate_indices_until_threshold
 import random
+import os
 
 def generate_toy_data(n_samples=200, random_state=42):
     """Generate toy data with 3:1 variance ratio between PCs."""
@@ -47,7 +48,7 @@ def get_cell_patch_data(cells_to_highlight, color, n_bins_pc1, n_bins_pc2, pc1_e
             patches_data.append({'xy': (x0, y0), 'width': width, 'height': height, 'facecolor': color, 'alpha': 0.3})
     return patches_data
 
-def create_animation(X, y, output_file='sampling_process.gif', target_sample_size=50, base_bins=8, random_seed=42):
+def create_animation(X, y, output_file='sampling_process.gif', target_sample_size=50, base_bins=8, random_seed=42, save_frames=False):
     random.seed(random_seed)
     pca = PCA(n_components=2)
     X_pca = pca.fit_transform(X)
@@ -228,6 +229,13 @@ def create_animation(X, y, output_file='sampling_process.gif', target_sample_siz
             ax.add_patch(patch)
             cell_patches_artists.append(patch)
             
+        # Save individual frames if requested
+        if save_frames:
+            frame_output_dir = os.path.splitext(output_file)[0] + '_frames'
+            os.makedirs(frame_output_dir, exist_ok=True)
+            frame_filename = os.path.join(frame_output_dir, f'frame_{frame_idx:03d}.png')
+            plt.savefig(frame_filename, dpi=300, bbox_inches='tight')
+            
         return scatter, remaining_text_artist, *grid_lines, *cell_patches_artists
 
     anim = FuncAnimation(fig, update, frames=len(frames_data), init_func=init, interval=2500, blit=True)
@@ -239,9 +247,10 @@ def main():
     # Generate toy data
     X, y = generate_toy_data()
     
-    # Create and save animation
-    output_file = create_animation(X, y, target_sample_size=50, base_bins=8)
+    # Create and save animation with individual frames
+    output_file = create_animation(X, y, target_sample_size=50, base_bins=8, save_frames=True)
     print(f"Animation saved to: {output_file}")
+    print(f"Individual frames saved to: {os.path.splitext(output_file)[0]}_frames/")
     print(f"Total number of points: {len(X)}")
 
     # Recalculate cell counts to ensure it's based on the final binning
