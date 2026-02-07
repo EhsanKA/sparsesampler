@@ -6,7 +6,7 @@ import pandas as pd
 from sparsesampler.preprocessing import perform_pca_binning, adjust_feature_importances, accumulate_indices_until_threshold
 
 
-def sample(X=None, size=50000, seed=1234, p=100, feature_index=12):
+def sample(X=None, size=50000, seed=1234, p=12, feature_index=12):
     """
     Perform PCA and binning to sample cells based on the PCA space.
     Parameters
@@ -21,7 +21,7 @@ def sample(X=None, size=50000, seed=1234, p=100, feature_index=12):
         Number of reduced dimensions for PCA.
     feature_index: int
         Index of the feature to use for adjusting the feature importances.
-        The default is 18, which is the 18th feature in the PCA space.
+        The default is 12, which is the 12th feature in the PCA space.
     Returns
     -------
     samples: list
@@ -34,6 +34,7 @@ def sample(X=None, size=50000, seed=1234, p=100, feature_index=12):
         X must be provided.
     """
 
+    p = feature_index + 1
     if X is None:
         raise ValueError("X must be provided.")
     
@@ -45,7 +46,7 @@ def sample(X=None, size=50000, seed=1234, p=100, feature_index=12):
     print(f'********* #Start# *********')
     start_time = time.time()
 
-    n_components = min(X.shape[1], feature_index+1)
+    n_components = min(X.shape[1], p)
     pca = PCA(n_components=n_components)
     pca.fit(X)
     X_pca = pca.transform(X)
