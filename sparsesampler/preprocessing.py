@@ -25,7 +25,7 @@ def perform_pca_binning(df, feature_importances, seed=12345):
     return
 
 
-def adjust_feature_importances(pca, k=100, constant=2):
+def adjust_feature_importances(pca, k=100, constant=2, feature_index=12):
     """
     Adjusts the feature importances based on the explained variance ratio from a PCA object.
 
@@ -38,22 +38,48 @@ def adjust_feature_importances(pca, k=100, constant=2):
         np.ndarray: Adjusted feature importances (integers), filtered by the constant or lower if needed.
     """
     explained = pca.explained_variance_ratio_
+    # print(f'Explained variance ratio: {explained}')
+    k = (1.0 / explained[feature_index]) * 2
+    print(f'K changed to: {k}')
     out = np.ceil(explained * k).astype(int)
+    # print(f'Adjusted feature importances: {out}')
     threshold = constant
     filtered = out[out > threshold]
     while filtered.size == 0 and threshold >= out.min():
         threshold -= 1
         filtered = out[out > threshold]
+    print(f'Filtered feature importances: {filtered}')
     return filtered
 
 
 def find_threshold_index(sorted_grid_cells, threshold):
+    """
+    Find the threshold index from sorted grid cell counts.
+    
+    The threshold index is the count value where accumulating samples from grid cells
+    (sorted by count ascending) reaches the threshold.
+    
+    Parameters:
+        sorted_grid_cells: Series with grid_cell as index and count as value, sorted by count
+        threshold: Threshold value for sampling
+    
+    Returns:
+        int or None: The threshold index (count value)
+    """
+    # Group by count value and sum the total samples for each count
+    # This is vectorized and much faster than iterating
+    # Group by the count values (the values of the Series) and sum them
+    count_groups = sorted_grid_cells.groupby(sorted_grid_cells.values).sum()
+    count_groups = count_groups.sort_index()  # Sort by count value (ascending)
+    
     cumulative = 0
-    for index, frequency in sorted_grid_cells.value_counts().sort_index().items():
-        cumulative += index * frequency
+    for count_value, total_samples in count_groups.items():
+        cumulative += total_samples
         if cumulative >= threshold:
-            return index
+            return count_value
+    
     return None
+
 
 
 def accumulate_indices_until_threshold(df, threshold, seed=1234):
